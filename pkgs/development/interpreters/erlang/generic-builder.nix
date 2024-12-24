@@ -1,5 +1,4 @@
 {
-  pkgs,
   lib,
   stdenv,
   fetchFromGitHub,
@@ -32,6 +31,8 @@
   coreutils,
   git,
   wrapGAppsHook3,
+  apple-sdk,
+  zlib,
 }:
 {
   baseName ? "erlang",
@@ -144,20 +145,15 @@ stdenv.mkDerivation (
       [
         ncurses
         opensslPackage
+        zlib
       ]
       ++ optionals wxSupport wxPackages2
       ++ optionals odbcSupport odbcPackages
       ++ optionals javacSupport javacPackages
       ++ optional systemdSupport systemd
-      ++ optionals stdenv.hostPlatform.isDarwin (
-        with pkgs.darwin.apple_sdk.frameworks;
-        [
-          AGL
-          Carbon
-          Cocoa
-          WebKit
-        ]
-      );
+      ++ optionals stdenv.hostPlatform.isDarwin [
+        apple-sdk
+      ];
 
     debugInfo = enableDebugInfo;
 
